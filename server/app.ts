@@ -34,12 +34,6 @@ app.use(cookieParser());
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
-// Test middleware
-app.use((req: any, res, next) => {
-  req.requestTime = new Date().toISOString();
-  // console.log(req.cookies);
-  next();
-});
 
 // if (process.env.NODE_ENV === "test") connectTestDB();
 // else {
