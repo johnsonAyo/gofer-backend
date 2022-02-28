@@ -8,7 +8,7 @@ import ErrorHandler from "./utils/appError";
 import globalErrorHandler from "./controllers/errorController";
 
 import userRouter from "./routes/userRoutes";
-
+import errandRoutes from "./routes/errandRoutes";
 import { connectTestDB } from "./db/db";
 
 const dotenv = require("dotenv");
@@ -34,6 +34,13 @@ app.use(cookieParser());
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
+// Test middleware
+app.use((req: any, res, next) => {
+  req.requestTime = new Date().toISOString();
+  // console.log(req.cookies);
+  next();
+});
+
 if (process.env.NODE_ENV === "test") connectTestDB();
 else {
   const DB = (process.env.DATABASE as string).replace(
@@ -52,8 +59,8 @@ else {
 }
 
 // 3) ROUTES
-app.use("/users", userRouter);
-
+app.use("/api/errands", errandRoutes);
+app.use("/api/users", userRouter);
 
 app.all('*', (req, res, next) => {
   next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));

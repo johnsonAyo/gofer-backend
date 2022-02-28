@@ -5,6 +5,9 @@ import User from '../models/UserModel';
 import catchAsync from '../utils/catchAsync';
 import ErrorHandler from '../utils/appError';
 import { CustomReq } from '../models/custom';
+import {
+  getAll
+} from "./handlerFactory";
 
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -54,6 +57,9 @@ export const signup = catchAsync(
     createSendToken(newUser, 201, req, res);
   }
 );
+
+
+export const getAllUser = getAll(User);
 
 export const login = catchAsync(
   async (req: CustomReq, res: Response, next: NextFunction) => {
