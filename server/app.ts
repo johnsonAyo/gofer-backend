@@ -4,6 +4,11 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import ErrorHandler from "./utils/appError";
+import globalErrorHandler from "./controllers/errorController";
+
+import userRouter from "./routes/userRoutes";
+
 import { connectTestDB } from "./db/db";
 
 const dotenv = require("dotenv");
@@ -46,8 +51,14 @@ else {
     .then(() => console.log(`DB connection successful!`));
 }
 
+// 3) ROUTES
+app.use("/users", userRouter);
 
 
+app.all('*', (req, res, next) => {
+  next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));
+});
 
+app.use(globalErrorHandler);
 
 export default app;

@@ -2,7 +2,6 @@ node_modules/
 lib/
 config.env/
 /node_modules
-config.env/
 babel.config.js/
 jest.config.ts/
 .prettier.rc/
