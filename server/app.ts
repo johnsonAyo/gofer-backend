@@ -3,7 +3,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
-
+import mongoose from "mongoose";
+import { connectTestDB } from "./db/db";
 
 const dotenv = require("dotenv");
 
@@ -27,6 +28,25 @@ app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
+
+if (process.env.NODE_ENV === "test") connectTestDB();
+else {
+  const DB = (process.env.DATABASE as string).replace(
+    "<PASSWORD>",
+    process.env.DATABASE_PASSWORD as string
+  );
+
+  mongoose
+    .connect(DB, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    })
+    .then(() => console.log(`DB connection successful!`));
+}
+
+
 
 
 
