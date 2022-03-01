@@ -9,7 +9,7 @@ import globalErrorHandler from "./controllers/errorController";
 
 import userRouter from "./routes/userRoutes";
 import errandRoutes from "./routes/errandRoutes";
-import { connectTestDB } from "./db/db";
+// import { connectTestDB } from "./db/db";
 
 const dotenv = require("dotenv");
 
@@ -41,8 +41,6 @@ app.use((req: any, res, next) => {
   next();
 });
 
-if (process.env.NODE_ENV === "test") connectTestDB();
-else {
   const DB = (process.env.DATABASE as string).replace(
     "<PASSWORD>",
     process.env.DATABASE_PASSWORD as string
@@ -56,7 +54,6 @@ else {
       useFindAndModify: false,
     })
     .then(() => console.log(`DB connection successful!`));
-}
 
 // 3) ROUTES
 app.use("/api/errands", errandRoutes);
