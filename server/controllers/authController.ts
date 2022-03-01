@@ -1,13 +1,13 @@
-import express, { NextFunction, Request, Response } from 'express';
-const { promisify } = require('util');
-import jwt from 'jsonwebtoken';
-import User from '../models/UserModel';
-import catchAsync from '../utils/catchAsync';
-import ErrorHandler from '../utils/appError';
-import { CustomReq } from '../models/custom';
-import {
-  getAll
-} from "./handlerFactory";
+import express, { NextFunction, Request, Response } from "express";
+const { promisify } = require("util");
+import jwt from "jsonwebtoken";
+import User from "../models/UserModel";
+import catchAsync from "../utils/catchAsync";
+import ErrorHandler from "../utils/appError";
+import { CustomReq } from "../models/custom";
+
+
+
 
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -23,20 +23,20 @@ const createSendToken = (
 ) => {
   const token = signToken(user._id);
 
-  res.cookie('jwt', token, {
+  res.cookie("jwt", token, {
     expires: new Date(
       Date.now() +
         (process.env.JWT_COOKIE_EXPIRES_IN as any) * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
   });
 
   // Remove password from output
   user.password = undefined;
 
   res.status(statusCode).json({
-    status: 'success',
+    status: "success",
     token,
     data: {
       user,
@@ -44,50 +44,51 @@ const createSendToken = (
   });
 };
 
+
+
+
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-
     const newUser = await User.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      phoneNumber:req.body.phoneNumber,
+      phoneNumber: req.body.phoneNumber,
       email: req.body.email,
       password: req.body.password,
     });
+
     createSendToken(newUser, 201, req, res);
   }
 );
 
-
-export const getAllUser = getAll(User);
-
 export const login = catchAsync(
   async (req: CustomReq, res: Response, next: NextFunction) => {
-
     const { email, password } = req.body;
 
     // 1) Check if email and password exist
     if (!email || !password) {
-      return next(ErrorHandler(400, 'Please provide email and password!', {}));
+      return next(ErrorHandler(400, "Please provide email and password!", {}));
     }
     // 2) Check if user exists && password is correct
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user || !(await user.correctPassword(password, user.password))) {
-      return next(ErrorHandler(401, 'Incorrect email or password', {}));
+      return next(ErrorHandler(401, "Incorrect email or password", {}));
     }
 
+    req.user = user;
     // 3) If everything ok, send token to client
     createSendToken(user, 200, req, res);
   }
 );
 
+
 export const logout = (req: Request, res: Response) => {
-  res.cookie('jwt', 'loggedout', {
+  res.cookie("jwt", "loggedout", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
-  res.status(200).json({ status: 'success' });
+  res.status(200).json({ status: "success" });
 };
 
 export const protect = catchAsync(
@@ -96,9 +97,9 @@ export const protect = catchAsync(
     let token;
     if (
       req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
+      req.headers.authorization.startsWith("Bearer")
     ) {
-      token = req.headers.authorization.split(' ')[1];
+      token = req.headers.authorization.split(" ")[1];
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     }
@@ -107,7 +108,7 @@ export const protect = catchAsync(
       return next(
         ErrorHandler(
           401,
-          'You are not logged in! Please log in to get access.',
+          "You are not logged in! Please log in to get access.",
           {}
         )
       );
@@ -122,7 +123,7 @@ export const protect = catchAsync(
       return next(
         ErrorHandler(
           401,
-          'The user belonging to this token does no longer exist.',
+          "The user belonging to this token does no longer exist.",
           {}
         )
       );
@@ -132,3 +133,4 @@ export const protect = catchAsync(
     next();
   }
 );
+

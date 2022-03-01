@@ -9,6 +9,7 @@ import globalErrorHandler from "./controllers/errorController";
 
 import userRouter from "./routes/userRoutes";
 import errandRoutes from "./routes/errandRoutes";
+import authRoutes from './routes/authRoutes'
 // import { connectTestDB } from "./db/db";
 
 const dotenv = require("dotenv");
@@ -53,6 +54,7 @@ app.use(mongoSanitize());
 // 3) ROUTES
 
 app.use("/api/errands", errandRoutes);
+app.use("/api/auth", authRoutes)
 app.use("/api/users", userRouter);
 
 
