@@ -51,12 +51,10 @@ app.use(mongoSanitize());
 
 
 // 3) ROUTES
-app.use('/', (req, res, next) => {
- res.send(`<h1> Welcome to gofer api, Navigate the Api with the postman documentations </h1>`)
-});
 
 app.use("/api/errands", errandRoutes);
 app.use("/api/users", userRouter);
+
 
 app.all('*', (req, res, next) => {
   next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));
