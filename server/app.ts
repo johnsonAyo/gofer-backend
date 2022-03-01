@@ -49,7 +49,12 @@ app.use(mongoSanitize());
     })
     .then(() => console.log(`DB connection successful!`));
 
+
 // 3) ROUTES
+app.use('/', (req, res, next) => {
+ res.send(`<h1> Welcome to gofer api, Navigate the Api with the postman documentations </h1>`)
+});
+
 app.use("/api/errands", errandRoutes);
 app.use("/api/users", userRouter);
 
