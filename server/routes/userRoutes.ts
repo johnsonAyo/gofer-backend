@@ -1,19 +1,16 @@
 import express, { NextFunction, Request, Response } from "express";
 
-import { signup, login, logout } from "./../controllers/authController";
-import {
-  getProfile,
-  getUserProfile,
-  getAllUser,
-} from "./../controllers/userController";
+import { signup, login, logout,getAllUser, getUserProfile , getProfile, protect} from "./../controllers/authController";
+
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/signup",  signup);
 router.post("/login", login);
-router.get("/profile", getProfile);
-router.get("/", getAllUser);
+router.get("/profile", protect, getProfile);
+router.get("/", protect, getAllUser);
 router.get("/logout", logout);
-router.get("/:userId", getUserProfile);
+router.get("/:userId", protect, getUserProfile);
+// router.patch("/", updateProfile);
 
 export default router;

@@ -5,7 +5,7 @@ import User from "../models/UserModel";
 import catchAsync from "../utils/catchAsync";
 import ErrorHandler from "../utils/appError";
 import { CustomReq } from "../models/custom";
-
+import {getAll}  from "./handlerFactory";
 
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -42,6 +42,8 @@ const createSendToken = (
   });
 };
 
+export const getAllUser = getAll(User)
+
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const newUser = await User.create({
@@ -71,10 +73,12 @@ export const login = catchAsync(
       return next(ErrorHandler(401, "Incorrect email or password", {}));
     }
 
+    req.user = user;
     // 3) If everything ok, send token to client
     createSendToken(user, 200, req, res);
   }
 );
+
 
 export const logout = (req: Request, res: Response) => {
   res.cookie("jwt", "loggedout", {
@@ -127,12 +131,22 @@ export const protect = catchAsync(
   }
 );
 
+
 export const getUserProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { page, size } = req.query as any;
     const user = await User.findOne({ _id: req.params.userId });
     return res.status(200).json({
       user,
     });
   }
 );
+
+
+export const getProfile = catchAsync(async (req: CustomReq , res: Response, next: NextFunction) => {
+  const user = await User.findOne({ _id: req.user._id});
+  console.log()
+  if (!user) return next(ErrorHandler(404, 'User does not exist',{}));
+  return res.status(200).json({
+    user,
+  });
+});
