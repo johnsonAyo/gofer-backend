@@ -35,8 +35,6 @@ app.use(cookieParser());
 app.use(mongoSanitize());
 
 
-// if (process.env.NODE_ENV === "test") connectTestDB();
-// else {
   const DB = (process.env.DATABASE as string).replace(
     "<PASSWORD>",
     process.env.DATABASE_PASSWORD as string
@@ -50,7 +48,6 @@ app.use(mongoSanitize());
       useFindAndModify: false,
     })
     .then(() => console.log(`DB connection successful!`));
-// }
 
 // 3) ROUTES
 app.use("/api/errands", errandRoutes);
