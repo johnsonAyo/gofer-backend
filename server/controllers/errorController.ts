@@ -53,7 +53,7 @@ const sendErrorProd = (err: { isOperational: any; statusCode: any; status: any; 
     // 2) Send generic message
     return res.status(500).json({
       status: 'error',
-      message: 'Something went very wrong!'
+      message: `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`
     });
   }
 };
