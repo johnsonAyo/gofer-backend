@@ -58,9 +58,9 @@ app.use("/api/auth", authRoutes)
 app.use("/api/users", userRouter);
 
 
-app.all('*', (req, res, next) => {
-  next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));
-});
+// app.all('*', (req, res, next) => {
+//   next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));
+// });
 
 app.use(globalErrorHandler);
 
