@@ -6,9 +6,6 @@ import catchAsync from "../utils/catchAsync";
 import ErrorHandler from "../utils/appError";
 import { CustomReq } from "../models/custom";
 
-
-
-
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -44,11 +41,17 @@ const createSendToken = (
   });
 };
 
-
-
-
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    const { email, phoneNumber } = req.body;
+    const userMail = await User.findOne({ email });
+    const userPhone = await User.findOne({ phoneNumber });
+
+    if (userMail || userPhone)
+      return next(
+        ErrorHandler(404, "User email or Phone number Already exist", {})
+      );
+
     const newUser = await User.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -81,7 +84,6 @@ export const login = catchAsync(
     createSendToken(user, 200, req, res);
   }
 );
-
 
 export const logout = (req: Request, res: Response) => {
   res.cookie("jwt", "loggedout", {
@@ -133,4 +135,3 @@ export const protect = catchAsync(
     next();
   }
 );
-
