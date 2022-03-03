@@ -7,9 +7,12 @@ import mongoose from "mongoose";
 import ErrorHandler from "./utils/appError";
 import globalErrorHandler from "./controllers/errorController";
 
-import userRouter from "./routes/userRoutes";
+
 import errandRoutes from "./routes/errandRoutes";
 import authRoutes from './routes/authRoutes'
+import categoryRoutes from './routes/categoryRoutes'
+import userRoutes from "./routes/userRoutes";
+import biddingRoutes from "./routes/biddingRoutes";
 // import { connectTestDB } from "./db/db";
 
 const dotenv = require("dotenv");
@@ -55,12 +58,14 @@ app.use(mongoSanitize());
 
 app.use("/api/errands", errandRoutes);
 app.use("/api/auth", authRoutes)
-app.use("/api/users", userRouter);
+app.use("/api/users", userRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/bidding", biddingRoutes);
 
 
-// app.all('*', (req, res, next) => {
-//   next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));
-// });
+app.all('*', (req, res, next) => {
+  next (ErrorHandler(404, `Can't find ${req.originalUrl} on this server, login via a Post Request to /users/login. Visit postman documentation for more information`,  {}));
+});
 
 app.use(globalErrorHandler);
 
