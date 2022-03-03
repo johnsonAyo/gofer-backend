@@ -41,10 +41,7 @@ const updateOne = (Model: any) =>
 
 const createOne = (Model: any) =>
   catchAsync(async (req: CustomReq, res: Response, next: NextFunction) => {
-
     const fullBody = { ...req.body, user: req.user?._id };
-
-
 
     const doc = await Model.create(fullBody);
 
@@ -56,11 +53,10 @@ const createOne = (Model: any) =>
     });
   });
 
-  
 const getOne = (Model: any, popOptions: string) =>
   catchAsync(async (req: CustomReq, res: Response, next: NextFunction) => {
     console.log(req.user?._id);
-    let query = Model.findById({  _id: req.params.id});
+    let query = Model.findById({ _id: req.params.id });
     if (popOptions) query = query.populate(popOptions);
     const doc = await query;
     console.log(doc);
@@ -83,9 +79,9 @@ const getAll = (Model: any) =>
     let filter = {};
     if (req.params.userId) filter = { userId: req.params.userId };
 
-    const features = Model.find(filter)
+    const features = Model.find(filter);
     // const doc = await features.query.explain();
-    const doc = await features
+    const doc = await features;
 
     if (!doc || doc.length === 0) {
       return next(ErrorHandler(404, "No document found with that ID", {}));
@@ -108,7 +104,7 @@ const getAllByUser = (Model: any) =>
     if (req.params.userId) filter = { userId: req.params.userId };
     console.log(req.user?._id);
 
-    const features = Model.find({ user: req.user?._id })
+    const features = Model.find({ user: req.user?._id });
 
     // const doc = await features.query.explain();
     const doc = await features.query;
