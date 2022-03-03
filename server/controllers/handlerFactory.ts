@@ -44,6 +44,8 @@ const createOne = (Model: any) =>
 
     const fullBody = { ...req.body, user: req.user?._id };
 
+
+
     const doc = await Model.create(fullBody);
 
     res.status(201).json({
@@ -54,6 +56,7 @@ const createOne = (Model: any) =>
     });
   });
 
+  
 const getOne = (Model: any, popOptions: string) =>
   catchAsync(async (req: CustomReq, res: Response, next: NextFunction) => {
     console.log(req.user?._id);

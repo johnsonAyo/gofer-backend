@@ -1,37 +1,41 @@
 import mongoose from "mongoose";
-// import User from '../models/UserModel';
 
 const errandSchema = new mongoose.Schema(
   {
     user: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
-
-    categories: {
-      type: String,
-      required: [true, "An errand  must have a category"],
-      enum: {
-        values: [
-          "pickup and delivery",
-          "shopping",
-          "transport",
-          "food purchase",
-          "gardening",
-          "baby sitting",
-          "laundry",
-          "cleaning",
-          "reading/writing",
-          "moving services",
-          "artisan service",
-          "ticket-purchase",
-          "chaffeur",
-          "auto-service",
-          "fashion & tailoring",
-          "tour-guides",
-        ],
-
-        message:
-          "errand categories is either: pickup and delivery, shopping, transport, food purchase, gardening, baby sitting, laundry, cleaning, reading/writing, moving services, artisan service, ticket-purchase, chaffeur, auto-service, fashion & tailoring, tour-guides, cathering service, real-estate, electronic-repair, investigative services, tutoring, others",
-      },
+    categoryId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "User",
+      required: [true, "Errand Category is required"],
     },
+
+    // categories: {
+    //   type: String,
+    //   required: [true, "An errand  must have a category"],
+    //   enum: {
+    //     values: [
+    //       "pickup and delivery",
+    //       "shopping",
+    //       "transport",
+    //       "food purchase",
+    //       "gardening",
+    //       "baby sitting",
+    //       "laundry",
+    //       "cleaning",
+    //       "reading/writing",
+    //       "moving services",
+    //       "artisan service",
+    //       "ticket-purchase",
+    //       "chaffeur",
+    //       "auto-service",
+    //       "fashion & tailoring",
+    //       "tour-guides",
+    //     ],
+
+    //     message:
+    //       "errand categories is either: pickup and delivery, shopping, transport, food purchase, gardening, baby sitting, laundry, cleaning, reading/writing, moving services, artisan service, ticket-purchase, chaffeur, auto-service, fashion & tailoring, tour-guides, cathering service, real-estate, electronic-repair, investigative services, tutoring, others",
+    //   },
+    // },
 
     errandDetails: {
       type: String,
@@ -51,6 +55,14 @@ const errandSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "pending",
+    },
+
+    acceptedAt: {
+      type: Date,
+    },
+
+    completedAt: {
+      type: Date,
     },
 
     isInsurance: {

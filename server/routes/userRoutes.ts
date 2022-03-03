@@ -1,16 +1,21 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 
-
-import {getUserProfile, getAllUser,getProfile, updateProfile} from "./../controllers/userController"
-import {protect} from "./../controllers/authController"
+import {
+  getUserProfile,
+  getAllUser,
+  getProfile,
+  updateProfile,
+} from "./../controllers/userController";
+import { protect } from "./../controllers/authController";
 
 const router = express.Router();
 
+// Protect all routes after this middleware
+router.use(protect);
 
-router.get("/", protect, getAllUser);
-router.patch("/", protect, updateProfile);
-router.get("/profile", protect, getProfile);
-router.get("/:userId", protect, getUserProfile);
-
+router.get("/", getAllUser);
+router.patch("/", updateProfile);
+router.get("/profile", getProfile);
+router.get("/:userId", getUserProfile);
 
 export default router;
