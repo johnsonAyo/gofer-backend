@@ -4,7 +4,7 @@ import ErrorHandler from "./../utils/appError";
 import express, { NextFunction, Request, Response } from "express";
 import { CustomReq } from "../models/custom";
 import cloudinaryImage from "./../utils/cloudinaryImageStorage";
-import imageMulter from './../utils/multerImageUpload';
+import imageMulter from "./../utils/multerImageUpload";
 import {
   getAll,
   getOne,
@@ -29,6 +29,7 @@ const createErrand = catchAsync(
         ...fullBody,
         tweetImage: null,
         cloudinary_id: null,
+        errandDeadline: new Date(req.body.errandDeadline) ,
       });
 
       res.status(201).json({
