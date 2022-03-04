@@ -1,10 +1,8 @@
 import Errand from "../models/ErrandModel";
 import catchAsync from "./../utils/catchAsync";
-import ErrorHandler from "./../utils/appError";
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { CustomReq } from "../models/custom";
 import cloudinaryImage from "./../utils/cloudinaryImageStorage";
-import imageMulter from "./../utils/multerImageUpload";
 import {
   getAll,
   getOne,
@@ -21,15 +19,25 @@ const getAllUserErrand = getAllByUser(Errand);
 
 const createErrand = catchAsync(
   async (req: CustomReq, res: Response, next: NextFunction) => {
-    const fullBody = { ...req.body, user: req.user?._id };
-    console.log(fullBody);
+    const {
+      errandDetails,
+      errandCost,
+      deliveryAddress,
+      categoryId,
+      pickupAddress,
+    } = req.body;
 
     if (req.file == undefined) {
       let createErrand = await Errand.create({
-        ...fullBody,
-        tweetImage: null,
+        user: req.user._id,
+        errandDetails,
+        errandCost,
+        deliveryAddress,
+        categoryId,
+        pickupAddress,
+        errandImage: null,
         cloudinary_id: null,
-        errandDeadline: new Date(req.body.errandDeadline) ,
+        errandDeadline: new Date(req.body.errandDeadline),
       });
 
       res.status(201).json({
@@ -41,8 +49,14 @@ const createErrand = catchAsync(
     } else {
       let cloudImage = await cloudinaryImage.uploader.upload(req.file.path);
       let createErrand = await Errand.create({
-        ...fullBody,
-        tweetImage: cloudImage.secure_url,
+        user: req.user._id,
+        errandDetails,
+        errandCost,
+        deliveryAddress,
+        categoryId,
+        pickupAddress,
+        errandDeadline: new Date(req.body.errandDeadline),
+        errandImage: cloudImage.secure_url,
         cloudinary_id: cloudImage.public_id,
       });
       res.status(201).json({

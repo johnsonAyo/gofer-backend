@@ -1,8 +1,8 @@
 const cloudinaryImage = require('cloudinary');
 
-import dotenv from 'dotenv';
+const dotenv = require("dotenv");
 
-dotenv.config();
+dotenv.config({ path: "./config.env" });
 
 try {
   cloudinaryImage.config({
@@ -10,8 +10,10 @@ try {
     api_key: process.env.CLOUDINARY_API_KEY_1,
     api_secret: process.env.CLOUDINARY_SECRET_1,
   });
+  console.log("this is cloudinary",process.env.CLOUDINARY_NAME_1, process.env.CLOUDINARY_API_KEY_1, process.env.CLOUDINARY_SECRET_1)
 } catch (error: any) {
   console.error(error.message);
 }
 
 export default cloudinaryImage;
+

@@ -5,6 +5,7 @@ import User from "../models/UserModel";
 import catchAsync from "../utils/catchAsync";
 import ErrorHandler from "../utils/appError";
 import { CustomReq } from "../models/custom";
+import cloudinaryImage from "./../utils/cloudinaryImageStorage";
 
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -51,16 +52,32 @@ export const signup = catchAsync(
       return next(
         ErrorHandler(404, "User email or Phone number Already exist", {})
       );
+    if (req.file == undefined) {
+      const newUser = await User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        password: req.body.password,
+        profileImage: null,
+        cloudinary_id: null,
+      });
 
-    const newUser = await User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      phoneNumber: req.body.phoneNumber,
-      email: req.body.email,
-      password: req.body.password,
-    });
+      createSendToken(newUser, 201, req, res);
+    } else {
+      let cloudImage = await cloudinaryImage.uploader.upload(req.file.path);
+      const newUser = await User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        password: req.body.password,
+        profileImage: cloudImage.secure_url,
+        cloudinary_id: cloudImage.public_id,
+      });
 
-    createSendToken(newUser, 201, req, res);
+      createSendToken(newUser, 201, req, res);
+    }
   }
 );
 
