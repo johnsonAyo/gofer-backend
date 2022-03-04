@@ -13,6 +13,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please tell us your lastName!"],
     },
+
+    profileImage: {
+      type: String,
+    },
+
+    cloudinary_id: {
+      type: String,
+    },
+
     email: {
       type: String,
       required: [true, "Please provide your email"],

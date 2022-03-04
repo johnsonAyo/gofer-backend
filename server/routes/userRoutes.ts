@@ -5,6 +5,7 @@ import {
   getAllUser,
   getProfile,
   updateProfile,
+  updateProfileImage,
 } from "./../controllers/userController";
 import { protect } from "./../controllers/authController";
 
@@ -17,5 +18,6 @@ router.get("/", getAllUser);
 router.patch("/", updateProfile);
 router.get("/profile", getProfile);
 router.get("/:userId", getUserProfile);
+router.patch("/profileImage", updateProfileImage);
 
 export default router;
