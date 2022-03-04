@@ -3,6 +3,10 @@ import catchAsync from "./../utils/catchAsync";
 import { NextFunction, Response } from "express";
 import { CustomReq } from "../models/custom";
 import cloudinaryImage from "./../utils/cloudinaryImageStorage";
+import imageMulter from "../utils/multerImageUpload";
+import multer from "multer";
+import ErrorHandler from "../utils/appError";
+const upload = imageMulter.single("profileImage");
 import {
   getAll,
   getOne,
@@ -66,6 +70,39 @@ const createErrand = catchAsync(
         },
       });
     }
+  }
+);
+
+
+
+export const updateErrandImage = catchAsync(
+  async (req: CustomReq, res: Response, next: NextFunction) => {
+    upload(req, res, async (err) => {
+      if (err instanceof multer.MulterError) {
+        return next(ErrorHandler(500, err.message, {}));
+      } else if (err) {
+        return next(ErrorHandler(500, err.message, {}));
+      }
+
+      const path = req.file?.path;
+      try {
+        const errand = await Errand.findOne({ _id: req.params.errandId });
+        console.log(errand)
+        if (!errand)
+          return next(ErrorHandler(500, "Errand does not exist", {}));
+        const file = await cloudinaryImage.uploader.upload(path as string);
+        await errand.updateOne({ errandImage: file.url });
+        const updatedErrand = await Errand.findOne({
+          _id: req.params.errandId,
+        });
+        return res.status(201).json({
+          status: "successful!",
+          errand: updatedErrand,
+        });
+      } catch (error) {
+        next(ErrorHandler(500, "An error Occured", {}));
+      }
+    });
   }
 );
 

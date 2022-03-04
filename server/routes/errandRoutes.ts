@@ -7,6 +7,7 @@ import {
   getAllErrand,
   getErrand,
   getAllUserErrand,
+  updateErrandImage
 } from "./../controllers/errandController";
 
 import { protect } from "./../controllers/authController";
@@ -27,6 +28,8 @@ router
   .get(getAllErrand)
   .post(imageMulter.single("errandImage"), createErrand);
 
-router.route("/:id").get(getErrand).patch(updateErrand).delete(deleteErrand);
+router.route("/:id").get(getErrand).patch(updateErrand).delete(deleteErrand)
+router.route("/image/:errandId").patch(updateErrandImage)
+
 
 export default router;
