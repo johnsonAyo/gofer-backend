@@ -56,8 +56,8 @@ const createOne = (Model: any) =>
 const getOne = (Model: any, popOptions: string) =>
   catchAsync(async (req: CustomReq, res: Response, next: NextFunction) => {
     console.log(req.user?._id);
-    let query = Model.findById({ _id: req.params.id });
-    if (popOptions) query = query.populate(popOptions);
+    let query = Model.findById({ _id: req.params.id }).populate("user");
+    if (popOptions) query = query.populate("");
     const doc = await query;
     console.log(doc);
 
@@ -79,7 +79,10 @@ const getAll = (Model: any) =>
     let filter = {};
     if (req.params.userId) filter = { userId: req.params.userId };
 
-    const features = Model.find(filter);
+    const features = Model.find(filter).populate("user", [
+      "firstName",
+      "lastName",
+    ]);
     // const doc = await features.query.explain();
     const doc = await features;
 

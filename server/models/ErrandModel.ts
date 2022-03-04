@@ -8,6 +8,13 @@ const errandSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Errand Category is required"],
     },
+    errandImage: {
+      type: String,
+    },
+
+    cloudinary_id: {
+      type: String,
+    },
 
     // categories: {
     //   type: String,
@@ -40,15 +47,16 @@ const errandSchema = new mongoose.Schema(
     errandDetails: {
       type: String,
       required: [true, "Give more information about the errands"],
+      default: '',
     },
 
     errandCost: {
-      type: Number,
+      type: String,
       required: [true, "How much are you willing to pay for the errands"],
     },
 
     errandDeadline: {
-      type: String,
+      type: Date,
       required: [true, "Deadline for this errands"],
     },
 

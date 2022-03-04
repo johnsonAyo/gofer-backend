@@ -1,4 +1,5 @@
 import express from "express";
+import imageMulter from "./../utils/multerImageUpload";
 import {
   deleteErrand,
   updateErrand,
@@ -21,7 +22,10 @@ router
   .delete(deleteErrand)
   .patch(updateErrand);
 
-router.route("/").get(getAllErrand).post(createErrand);
+router
+  .route("/")
+  .get(getAllErrand)
+  .post(imageMulter.single("errandImage"), createErrand);
 
 router.route("/:id").get(getErrand).patch(updateErrand).delete(deleteErrand);
 
