@@ -1,4 +1,5 @@
 import express from "express";
+import iconMulter from "./../utils/multerImageUpload";
 import {
   deleteCategory,
   updateCategory,
@@ -7,17 +8,18 @@ import {
   getCategory,
 } from "./../controllers/categoryController";
 
-
 const router = express.Router();
 
 // Protect all routes after this middleware
 
-router.route("/").get(getAllCategory).post(createCategory);
+router
+  .route("/")
+  .get(getAllCategory)
+  .post(iconMulter.single("icon"), createCategory);
 router
   .route("/:id")
   .get(getCategory)
   .delete(deleteCategory)
   .patch(updateCategory);
-
 
 export default router;
