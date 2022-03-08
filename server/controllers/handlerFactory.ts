@@ -107,10 +107,7 @@ const getAllByUser = (Model: any) =>
     if (req.params.userId) filter = { userId: req.params.userId };
     console.log(req.user?._id);
 
-    const features = Model.find({ user: req.user?._id });
-
-    // const doc = await features.query.explain();
-    const doc = await features.query;
+    const doc = await Model.find({ user: req.user?._id });
 
     if (!doc || doc.length === 0) {
       return next(ErrorHandler(404, "No document found with that ID", {}));
